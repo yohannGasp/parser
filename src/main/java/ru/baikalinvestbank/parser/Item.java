@@ -35,6 +35,8 @@ public class Item {
     @XmlElement
     String cost;
 
+    int cost_int;
+
     @XmlElement
     String currency;
 
@@ -55,5 +57,17 @@ public class Item {
 
     @XmlElement
     String dateAdd;
+
+    public String getYear() {
+        return year;
+    }
+
+    public String getCost() {
+        return cost;
+    }
+
+    public String getLink() {
+        return link;
+    }
 
 }

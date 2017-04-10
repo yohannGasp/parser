@@ -1,20 +1,20 @@
 package ru.baikalinvestbank.parser;
 
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-
-
+import util.Convert;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * XML: https://www.stroyteh.ru/sale/xml/
+ * 
+ * https://www.stroyteh.ru/sale/xml/?mark=%D0%93%D0%90%D0%97&model=3302&mileageMax=10000
  */
 /**
  *
@@ -36,7 +36,7 @@ public class StroytehRu {
 //            object = jaxbUnmarshaller.unmarshal(new File("/home/evgeniy/NetBeansProjects/parserSite/src/parsersite/response1.xml"));
 
             } catch (JAXBException ex) {
-                
+
             }
 
             return object;
@@ -49,39 +49,43 @@ public class StroytehRu {
      * @param url
      * @return
      */
-    public String parse(String url) {
+    public List parse(String url) {
+
+        List<Item> result = new ArrayList<Item>();
 
         try {
 
             String base_url = url;
-            
-            base_url = "https://www.stroyteh.ru/sale/xml/?mark=%D0%93%D0%90%D0%97&model=3302&mileageMax=10000";
-
             List<Item> mas = new ArrayList();
 
             Items items = (Items) new JaxbParser().getObject(new URL(base_url), Items.class);
             for (Item item : items.getMembers()) {
+                
+                item.cost_int = new Convert().strToInt(item.cost);
                 mas.add(item);
+                
             }
 
-            // Sorting
-//        Collections.sort(mas, new Comparator<Item>() {
-//
-//            @Override
-//            public int compare(Item item2, Item item1) {
-//                return item2.cost - item1.cost;
-//            }
-//        });
+            // Sorting min sum
+            Collections.sort(mas, new Comparator<Item>() {
+
+                @Override
+                public int compare(Item item2, Item item1) {
+
+                    return item2.cost_int - item1.cost_int;
+                }
+            });
+
             for (Item item : mas) {
-                System.out.println(item.title + " " + item.cost);
-                System.out.println(item.link);
+                result.add(item);
+                System.out.println(item.cost_int);
             }
 
         } catch (IOException ex) {
-            
+            System.out.println(ex.getMessage());
         }
-        
-        return "";
+
+        return result;
 
     }
 

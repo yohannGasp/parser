@@ -21,27 +21,25 @@ public class gruzovikRu {
 
     public static String parse(String url) {
 
-        String title = null;
+        StringBuilder builder = new StringBuilder();
+        String result = "";
 
         Document doc;
         try {
 
             doc = Jsoup.connect(request1).userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0").get();
-            title = doc.title();
             Elements table = doc.select("div.text");
 
             for (Element element : table) {
-                System.out.println(element.text());
-//                System.out.println(element.getElementsByClass("listing-item__description").text());
-                System.out.println("=======================");
+                builder.append(element.text() + ";");
             }
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
-        System.out.println("Jsoup Can read HTML page from URL, title : " + title);
-        return "";
+        result = builder.toString();
+        return result;
     }
 
 }
