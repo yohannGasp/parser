@@ -69,5 +69,9 @@ public class Item {
     public String getLink() {
         return link;
     }
+    
+    public int getCostInt(){
+        return cost_int;
+    }
 
 }

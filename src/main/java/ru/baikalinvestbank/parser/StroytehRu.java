@@ -49,36 +49,31 @@ public class StroytehRu {
      * @param url
      * @return
      */
-    public List parse(String url) {
+    public List<Item> parse(String url) {
 
+        List<Item> mas = new ArrayList();
         List<Item> result = new ArrayList<Item>();
 
         try {
 
-            String base_url = url;
-            List<Item> mas = new ArrayList();
-
-            Items items = (Items) new JaxbParser().getObject(new URL(base_url), Items.class);
+            Items items = (Items) new JaxbParser().getObject(new URL(url), Items.class);
             for (Item item : items.getMembers()) {
-                
-                item.cost_int = new Convert().strToInt(item.cost);
-                mas.add(item);
-                
+                if (item.cost != null) {
+                    item.cost_int = new Convert().strToInt(item.cost);
+                    mas.add(item);
+                }
             }
 
             // Sorting min sum
             Collections.sort(mas, new Comparator<Item>() {
-
                 @Override
                 public int compare(Item item2, Item item1) {
-
                     return item2.cost_int - item1.cost_int;
                 }
             });
-
+            
             for (Item item : mas) {
                 result.add(item);
-                System.out.println(item.cost_int);
             }
 
         } catch (IOException ex) {

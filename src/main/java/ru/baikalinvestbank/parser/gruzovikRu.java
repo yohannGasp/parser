@@ -17,8 +17,6 @@ import org.jsoup.select.Elements;
  */
 public class gruzovikRu {
 
-    public final static String request1 = "https://www.gruzovik.ru/offers/trucks/refrigerator/";
-
     public static String parse(String url) {
 
         StringBuilder builder = new StringBuilder();
@@ -27,7 +25,7 @@ public class gruzovikRu {
         Document doc;
         try {
 
-            doc = Jsoup.connect(request1).userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0").get();
+            doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0").get();
             Elements table = doc.select("div.text");
 
             for (Element element : table) {

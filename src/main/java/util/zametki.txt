@@ -1,0 +1,35 @@
+        // auto.ru
+        if (jCheckBox2.isSelected()) {
+            
+            if (marka.length() > 0) {
+                parameters = parameters.concat("mark=").concat(marka).concat("&");
+            }
+            if (model.length() > 0) {
+                parameters = parameters.concat("model=").concat(model).concat("&");
+            }
+            if (year.length() > 0) {
+                parameters = parameters.concat("year=").concat(year).concat("&");
+            }
+            if (capacity.length() > 0) {
+                parameters = parameters.concat("capacity=").concat(capacity).concat("&");
+            }
+            if (mileage.length() > 0) {
+                parameters = parameters.concat("mileageMax=").concat(mileage).concat("&");
+            }
+            if (priceMax.length() > 0) {
+                parameters = parameters.concat("pmax=").concat(priceMax);
+            }
+            List result;
+            parameters = "https://auto.ru/cars/audi/100/all/?year_to=2017&beaten=1&customs_state=1&geo_radius=200&price_to=200+000+%E2%82%BD&image=true&sort_offers=fresh_relevance_1-DESC&top_days=off&currency=RUR&output_type=list&page_num_offers=1";
+            
+            result = new AutoRu().parse(URL_AUTO_RU.concat(parameters));
+
+            jLabel7.setText("Количество позиций:".concat(Integer.toString(result.size())));
+            
+            if (result.size() >= 3) {
+                
+            } else {
+                new NewOkCancelDialog(this, true, "Результат меньше 3 позиций").setVisible(true);
+            }
+
+        }

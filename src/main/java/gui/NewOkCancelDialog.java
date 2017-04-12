@@ -38,6 +38,7 @@ public class NewOkCancelDialog extends javax.swing.JDialog {
         this.text = mess;
         initComponents();
         jLabel1.setText(this.text);
+        this.setLocationRelativeTo(null);
         
 
         // Close the dialog when Esc is pressed
