@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.JFrame;
 import ru.baikalinvestbank.parser.*;
 import util.ToMsWord;
@@ -41,7 +41,7 @@ public class mainJFrame extends javax.swing.JFrame {
 
     public String parameters = "?";
 
-    Set<String> grModel1 = new HashSet<>();
+    Set<String> grModel1 = new TreeSet<>();
     Map<String, List<itemModel>> grModel2 = new HashMap<>();
 
     /**
@@ -63,17 +63,80 @@ public class mainJFrame extends javax.swing.JFrame {
         grModel1.add("Капотный тягач");
 
         grModel2.put("Автобусы", Arrays.asList(
-                new itemModel("Автодома", "www.gruzovik.ru/offers/passengers/autohouse/"),
-                new itemModel("Вахтовые автобусы", "www.gruzovik.ru/offers/passengers/rotational-bus/"),
-                new itemModel("Городские автобусы", "www.gruzovik.ru/offers/passengers/city-bus/"),
-                new itemModel("Междугородные автобусы", "www.gruzovik.ru/offers/passengers/bus/"),
-                new itemModel("Микроавтобусы", "www.gruzovik.ru/offers/passengers/minibus/"),
-                new itemModel("Пригородные автобусы", "www.gruzovik.ru/offers/passengers/shuttle-bus/"),
-                new itemModel("Другой пассажирский транспорт", "www.gruzovik.ru/offers/passengers/misc/"),
-                new itemModel("Автолавки", "www.gruzovik.ru/offers/spectech/shop-trailer/"),
-                new itemModel("Грузовики фургоны", "www.gruzovik.ru/offers/trucks/van/"),
-                new itemModel("Грузопассажирские фургоны", "www.gruzovik.ru/offers/trucks/cargo-and-passenger/"),
-                new itemModel("Жилые прицепы", "www.gruzovik.ru/offers/hookon/camper/")
+                new itemModel("Автодома", "https://www.gruzovik.ru/offers/passengers/autohouse/"),
+                new itemModel("Вахтовые автобусы", "https://www.gruzovik.ru/offers/passengers/rotational-bus/"),
+                new itemModel("Городские автобусы", "https://www.gruzovik.ru/offers/passengers/city-bus/"),
+                new itemModel("Междугородные автобусы", "https://www.gruzovik.ru/offers/passengers/bus/"),
+                new itemModel("Микроавтобусы", "https://www.gruzovik.ru/offers/passengers/minibus/"),
+                new itemModel("Пригородные автобусы", "https://www.gruzovik.ru/offers/passengers/shuttle-bus/"),
+                new itemModel("Другой пассажирский транспорт", "https://www.gruzovik.ru/offers/passengers/misc/"),
+                new itemModel("Автолавки", "https://www.gruzovik.ru/offers/spectech/shop-trailer/"),
+                new itemModel("Грузовики фургоны", "https://www.gruzovik.ru/offers/trucks/van/"),
+                new itemModel("Грузопассажирские фургоны", "https://www.gruzovik.ru/offers/trucks/cargo-and-passenger/"),
+                new itemModel("Жилые прицепы", "https://www.gruzovik.ru/offers/hookon/camper/")
+        ));
+
+        grModel2.put("Грузовики", Arrays.asList(
+                new itemModel("Автовозы", "https://www.gruzovik.ru/offers/trucks/rack-car/"),
+                new itemModel("Пищевые автоцистерны", "https://www.gruzovik.ru/offers/trucks/food-tank/"),
+                new itemModel("Бензовозы", "https://www.gruzovik.ru/offers/trucks/gasoline-tanker/"),
+                new itemModel("Бортовые грузовики", "https://www.gruzovik.ru/offers/trucks/onboard/"),
+                new itemModel("Грузопассажирские фургоны", "https://www.gruzovik.ru/offers/trucks/cargo-and-passenger/"),
+                new itemModel("Изотермические грузовики", "https://www.gruzovik.ru/offers/trucks/isothermal/"),
+                new itemModel("Контейнеровозы", "https://www.gruzovik.ru/offers/trucks/container-truck/"),
+                new itemModel("Лесовозы", "https://www.gruzovik.ru/offers/trucks/timber-truck/"),
+                new itemModel("Грузовики-рефрижераторы", "https://www.gruzovik.ru/offers/trucks/refrigerator/"),
+                new itemModel("Самопогрузчики", "https://www.gruzovik.ru/offers/trucks/selfloader/"),
+                new itemModel("Самосвалы", "https://www.gruzovik.ru/offers/trucks/tipper/"),
+                new itemModel("Скотовозы", "https://www.gruzovik.ru/offers/trucks/cattle-truck/"),
+                new itemModel("Тентованные грузовики", "https://www.gruzovik.ru/offers/trucks/tilt/"),
+                new itemModel("Топливозаправщики", "https://www.gruzovik.ru/offers/trucks/bowser/"),
+                new itemModel("Трубовозы", "https://www.gruzovik.ru/offers/trucks/pipe-carrier/"),
+                new itemModel("Грузовики-фургоны", "https://www.gruzovik.ru/offers/trucks/van/"),
+                new itemModel("Шасси", "https://www.gruzovik.ru/offers/trucks/chassis/"),
+                new itemModel("Другие грузовики", "https://www.gruzovik.ru/offers/trucks/misc/"),
+                new itemModel("Бескапотные седельные тягачи", "https://www.gruzovik.ru/offers/truck-tractor/forward-control/"),
+                new itemModel("Бетономиксеры", "https://www.gruzovik.ru/offers/constructions/concretemixer/"),
+                new itemModel("Бетононасосы", "https://www.gruzovik.ru/offers/constructions/concretepump/"),
+                new itemModel("Вездеходы", "https://www.gruzovik.ru/offers/spectech/all-terrain/"),
+                new itemModel("Грузовики самосвалы-зерновозы", "https://www.gruzovik.ru/offers/agricult/grain-dump-truck/"),
+                new itemModel("Капотные седельные тягачи", "https://www.gruzovik.ru/offers/truck-tractor/conventional/"),
+                new itemModel("Карьерные самосвалы", "https://www.gruzovik.ru/offers/mining-machinery/pit-run-dumper/"),
+                new itemModel("Легкие грузовики", "https://www.gruzovik.ru/offers/trucks-small/"),
+                new itemModel("Лесовозы", "https://www.gruzovik.ru/offers/timber-machinery/timber-truck/"),
+                new itemModel("Мини самосвалы", "https://www.gruzovik.ru/offers/mini/minitipper/"),
+                new itemModel("Мусоровозы", "https://www.gruzovik.ru/offers/utility-machinery/garbage-truck/"),
+                new itemModel("Средние грузовики", "https://www.gruzovik.ru/offers/trucks-average/"),
+                new itemModel("Тяжёлые грузовики", "https://www.gruzovik.ru/offers/trucks-heavy/")
+        ));
+
+        grModel2.put("Стройтехника", Arrays.asList(
+                new itemModel("Автокраны", "https://www.gruzovik.ru/offers/constructions/autocrane/"),
+                new itemModel("Бетономиксеры", "https://www.gruzovik.ru/offers/constructions/concretemixer/"),
+                new itemModel("Бетононасосы", "https://www.gruzovik.ru/offers/constructions/concretepump/"),
+                new itemModel("Бульдозеры", "https://www.gruzovik.ru/offers/constructions/buldoser/"),
+                new itemModel("Бурильно-сваебойные машины", "https://www.gruzovik.ru/offers/constructions/borepile/"),
+                new itemModel("Буровые установки", "https://www.gruzovik.ru/offers/constructions/bore/"),
+                new itemModel("Краны", "https://www.gruzovik.ru/offers/constructions/crane/"),
+                new itemModel("Телескопические погрузчики", "https://www.gruzovik.ru/offers/constructions/teleloader/"),
+                new itemModel("Трубоукладчики", "https://www.gruzovik.ru/offers/constructions/pipelayers/"),
+                new itemModel("Фронтальные погрузчики", "https://www.gruzovik.ru/offers/constructions/frontloader/"),
+                new itemModel("Экскаваторы", "https://www.gruzovik.ru/offers/constructions/excavator/"),
+                new itemModel("Экскаваторы-погрузчики", "https://www.gruzovik.ru/offers/constructions/excavator-loader/"),
+                new itemModel("Другая стройтехника", "https://www.gruzovik.ru/offers/constructions/misc/"),
+                new itemModel("Автопогрузчики", "https://www.gruzovik.ru/offers/mining-machinery/autoloader/"),
+                new itemModel("Асфальтоукладчики", "https://www.gruzovik.ru/offers/road-building-machinery/asphalt-machine/"),
+                new itemModel("Горные экскаваторы", "https://www.gruzovik.ru/offers/mining-machinery/mine-excavator/"),
+                new itemModel("Грейдеры", "https://www.gruzovik.ru/offers/road-building-machinery/grader/"),
+                new itemModel("Грузовики самосвалы", "https://www.gruzovik.ru/offers/trucks/tipper/"),
+                new itemModel("Дорожные катки", "https://www.gruzovik.ru/offers/road-building-machinery/road-roller/"),
+                new itemModel("Карьерные самосвалы", "https://www.gruzovik.ru/offers/mining-machinery/pit-run-dumper/"),
+                new itemModel("Мини погрузчики", "https://www.gruzovik.ru/offers/mini/mini-loader/"),
+                new itemModel("Мини самосвалы", "https://www.gruzovik.ru/offers/mini/minitipper/"),
+                new itemModel("Мини тракторы", "https://www.gruzovik.ru/offers/mini/minitractor/"),
+                new itemModel("Мини экскаваторы", "https://www.gruzovik.ru/offers/mini/mini-excavator/"),
+                new itemModel("Тракторы", "https://www.gruzovik.ru/offers/agricult/tractor/"),
+                new itemModel("Тяжеловозы", "https://www.gruzovik.ru/offers/semitrailers/heavy-truck/")
         ));
 
         Iterator<String> iterator = grModel1.iterator();
@@ -86,6 +149,7 @@ public class mainJFrame extends javax.swing.JFrame {
         for (itemModel itemM : grModel2.get("Автобусы")) {
             jComboBox2.addItem(itemM.getName());
         }
+
     }
 
     /**
@@ -107,6 +171,10 @@ public class mainJFrame extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
         buttonGroup3 = new javax.swing.ButtonGroup();
+        buttonGroup4 = new javax.swing.ButtonGroup();
+        buttonGroup5 = new javax.swing.ButtonGroup();
+        buttonGroup6 = new javax.swing.ButtonGroup();
+        buttonGroup7 = new javax.swing.ButtonGroup();
         jButton1 = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
@@ -125,6 +193,9 @@ public class mainJFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
 
         jMenu3.setText("jMenu3");
 
@@ -209,53 +280,65 @@ public class mainJFrame extends javax.swing.JFrame {
             }
         });
 
+        jMenu1.setText("Файл");
+        jMenuBar1.add(jMenu1);
+
+        jMenu4.setText("Справка");
+        jMenu4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu4ActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(jMenu4);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(208, 208, 208)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 892, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField3))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField2))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField3))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField2))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel5)
-                                            .addComponent(jLabel6))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jTextField6)
-                                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                                            .addComponent(jTextField4))))
-                                .addGap(44, 44, 44)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jCheckBox3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(208, 208, 208)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jTextField6)
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                                    .addComponent(jTextField4))))
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jCheckBox3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(46, 46, 46)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(18, 18, 18)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32))
+                .addGap(276, 276, 276))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -292,16 +375,16 @@ public class mainJFrame extends javax.swing.JFrame {
                             .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1))
+                        .addComponent(jLabel7))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jCheckBox3)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -391,25 +474,47 @@ public class mainJFrame extends javax.swing.JFrame {
         if (jCheckBox3.isSelected()) {
             String res = new gruzovikRu().parse(urlGruzovikRu);
             System.out.println(res);
+            new NewOkCancelDialog(this, true, "ok").setVisible(true);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        new NewOkCancelDialog(this, true, jComboBox1.getItemAt(jComboBox1.getSelectedIndex())).setVisible(true);
+
+        jComboBox2.removeAllItems();
+
+        String key = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+
+        if (grModel2.containsKey(key)) {
+            for (itemModel itemM : grModel2.get(key)) {
+                jComboBox2.addItem(itemM.getName());
+            }
+        }
+
+
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
-        
+
     }//GEN-LAST:event_jCheckBox3ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        
-        
-        List<itemModel> list = grModel2.get("Автобусы");
-        System.out.println(list.get(jComboBox2.getSelectedIndex()).getName());
-        //new NewOkCancelDialog(this, true, url).setVisible(true);
-        
+
+        String key1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+        String key2 = jComboBox2.getItemAt(jComboBox2.getSelectedIndex());
+
+        if (grModel2.containsKey(key1)) {
+            for (itemModel itemM: grModel2.get(key1)) {
+                if (itemM.getName().equals(key2)) {
+                    System.out.println(itemM.getName() + " " + itemM.getHref());
+                    urlGruzovikRu = itemM.getHref();
+                }
+            }
+        }
     }//GEN-LAST:event_jComboBox2ActionPerformed
+
+    private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -431,6 +536,10 @@ public class mainJFrame extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.ButtonGroup buttonGroup4;
+    private javax.swing.ButtonGroup buttonGroup5;
+    private javax.swing.ButtonGroup buttonGroup6;
+    private javax.swing.ButtonGroup buttonGroup7;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox3;
@@ -445,7 +554,10 @@ public class mainJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;

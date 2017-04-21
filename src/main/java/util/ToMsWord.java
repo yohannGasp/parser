@@ -164,7 +164,7 @@ public class ToMsWord {
         p8.setVerticalAlignment(TextAlignment.BOTTOM);
 
         XWPFRun r81 = p8.createRun();
-        r81.setText("MITSUBISHI PAJERO");
+        r81.setText("МАРКА МАШИНЫ");
         r81.setFontFamily("Times New Roman");
         r81.setFontSize(12);
         r81.addBreak(BreakType.TEXT_WRAPPING);
