@@ -1,5 +1,8 @@
 package gui;
 
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JFrame;
 import ru.baikalinvestbank.parser.*;
+import static util.GrabScreen.screenCom;
 import util.ToMsWord;
 import util.elem;
 import util.itemModel;
@@ -30,7 +34,13 @@ public class mainJFrame extends javax.swing.JFrame {
 
     String urlStroytehRu;
     String urlGruzovikRu;
+    String urlAutoRu;
     String userHome;
+    String browser;
+    long pause;
+    String proxyHost;
+    String proxyPort;
+    Proxy proxy;
 
     String marka = "";
     String model = "";
@@ -38,6 +48,7 @@ public class mainJFrame extends javax.swing.JFrame {
     String capacity = "";
     String mileage = "";
     String priceMax = "";
+    String priceMin = "";
 
     public String parameters = "?";
 
@@ -55,12 +66,6 @@ public class mainJFrame extends javax.swing.JFrame {
         grModel1.add("Автобусы");
         grModel1.add("Грузовики");
         grModel1.add("Стройтехника");
-        grModel1.add("Фронтальный погрузчик");
-        grModel1.add("Бульдозер");
-        grModel1.add("Автокран");
-        grModel1.add("Седельный тягач");
-        grModel1.add("Бескапотный тягач");
-        grModel1.add("Капотный тягач");
 
         grModel2.put("Автобусы", Arrays.asList(
                 new itemModel("Автодома", "https://www.gruzovik.ru/offers/passengers/autohouse/"),
@@ -193,6 +198,11 @@ public class mainJFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
+        jCheckBox2 = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
+        jTextField7 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jCheckBox4 = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
@@ -248,13 +258,13 @@ public class mainJFrame extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("КАМАЗ");
+        jTextField1.setText("toyota");
 
         jLabel1.setText("Марка");
 
         jLabel2.setText("Модель");
 
-        jTextField2.setText("45143");
+        jTextField2.setText("auris");
 
         jLabel3.setText("Год выпуска");
 
@@ -262,7 +272,7 @@ public class mainJFrame extends javax.swing.JFrame {
 
         jLabel5.setText("Пробег");
 
-        jLabel6.setText("Цена");
+        jLabel6.setText("Цена от");
 
         jLabel7.setText("Количество позиций:");
 
@@ -279,6 +289,15 @@ public class mainJFrame extends javax.swing.JFrame {
                 jComboBox2ActionPerformed(evt);
             }
         });
+
+        jCheckBox2.setSelected(true);
+        jCheckBox2.setText("скриншот");
+
+        jLabel8.setText("version 1.4");
+
+        jLabel9.setText("до");
+
+        jCheckBox4.setText("auto.ru");
 
         jMenu1.setText("Файл");
         jMenuBar1.add(jMenu1);
@@ -297,48 +316,65 @@ public class mainJFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(208, 208, 208)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 892, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField3))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField2))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel9)))
+                        .addGap(361, 361, 361))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextField2))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextField1))
+                                .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel5)
-                                    .addComponent(jLabel6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField6)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                                    .addComponent(jTextField4))))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jCheckBox3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(46, 46, 46)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jCheckBox3, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                                .addGap(10, 10, 10)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBox2)
+                                    .addComponent(jCheckBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(18, 18, 18)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(276, 276, 276))
+                .addGap(10, 10, 10))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(195, 195, 195)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -354,37 +390,48 @@ public class mainJFrame extends javax.swing.JFrame {
                         .addComponent(jCheckBox1)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(13, 13, 13)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel7))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jCheckBox3)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox4))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBox2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))))))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(27, 27, 27)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel8))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pack();
@@ -392,9 +439,13 @@ public class mainJFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        if (!jCheckBox1.isSelected() && !jCheckBox3.isSelected()) {
+        if (!jCheckBox1.isSelected() && !jCheckBox3.isSelected() && !jCheckBox4.isSelected()) {
             new NewOkCancelDialog(this, true, "not checked").setVisible(true);
         }
+
+        click();
+
+        parameters = "?";
 
         marka = jTextField1.getText();
         model = jTextField2.getText();
@@ -402,6 +453,7 @@ public class mainJFrame extends javax.swing.JFrame {
         capacity = jTextField4.getText();
         mileage = jTextField5.getText();
         priceMax = jTextField6.getText();
+        priceMin = jTextField7.getText();
 
         int ageSum;
         int spSum;
@@ -430,11 +482,14 @@ public class mainJFrame extends javax.swing.JFrame {
             if (mileage.length() > 0) {
                 parameters = parameters.concat("mileageMax=").concat(mileage).concat("&");
             }
+            if (priceMin.length() > 0) {
+                parameters = parameters.concat("pmin=").concat(priceMin).concat("&");
+            }
             if (priceMax.length() > 0) {
                 parameters = parameters.concat("pmax=").concat(priceMax);
             }
             List<Item> result;
-            result = new StroytehRu().parse(urlStroytehRu.concat(parameters));
+            result = new StroytehRu().parse(urlStroytehRu.concat(parameters), this.proxy);
 
             jLabel7.setText("Количество позиций:".concat(Integer.toString(result.size())));
 
@@ -460,7 +515,17 @@ public class mainJFrame extends javax.swing.JFrame {
                 ageSum = (result.get(0).getCostInt() + result.get(1).getCostInt() + result.get(2).getCostInt()) / 3;
                 spSum = (int) (ageSum * 0.9);
 
-                toMsWord.process(param, ageSum, spSum);
+                InputStream is1 = null;
+                InputStream is2 = null;
+                InputStream is3 = null;
+
+                if (jCheckBox2.isSelected()) {
+                    is1 = screenCom(this.browser, result.get(0).getLink(), this.pause);
+                    is2 = screenCom(this.browser, result.get(1).getLink(), this.pause);
+                    is3 = screenCom(this.browser, result.get(2).getLink(), this.pause);
+                }
+
+                toMsWord.process(param, ageSum, spSum, marka, model, is1, is2, is3);
 
                 new NewOkCancelDialog(this, true, "ok").setVisible(true);
 
@@ -472,9 +537,137 @@ public class mainJFrame extends javax.swing.JFrame {
 
         // www.gruzovik.ru
         if (jCheckBox3.isSelected()) {
-            String res = new gruzovikRu().parse(urlGruzovikRu);
-            System.out.println(res);
-            new NewOkCancelDialog(this, true, "ok").setVisible(true);
+
+            // marka in eng str
+            if (marka.length() > 0) {
+                urlGruzovikRu = urlGruzovikRu.concat(marka).concat("/");
+            }
+
+            if (model.length() > 0) {
+                urlGruzovikRu = urlGruzovikRu.concat(model).concat("/");
+            }
+
+            if (priceMin.length() > 0) {
+                parameters = parameters.concat("pf=").concat(priceMin).concat("&");
+            }
+
+            if (priceMax.length() > 0) {
+                parameters = parameters.concat("pt=").concat(priceMax);
+            }
+
+            System.out.println(urlGruzovikRu);
+
+            List<Item> result;
+            result = new gruzovikRu().parse(urlGruzovikRu.concat(parameters), this.proxy);
+
+            jLabel7.setText("Количество позиций:".concat(Integer.toString(result.size())));
+
+            if (result.size() >= 3) {
+
+                /**
+                 * MS WORD
+                 *
+                 */
+                ToMsWord toMsWord = new ToMsWord();
+
+                Format formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                String dateTime = formatter.format(Calendar.getInstance().getTime());
+
+                toMsWord.setNamefile(this.userHome + System.getProperty("file.separator") + "Report_" + dateTime + ".docx");
+
+                List<elem> param = new ArrayList<>();
+
+                param.add(new elem(result.get(0).getCost(), result.get(0).getLink()));
+                param.add(new elem(result.get(1).getCost(), result.get(1).getLink()));
+                param.add(new elem(result.get(2).getCost(), result.get(2).getLink()));
+
+                ageSum = (result.get(0).getCostInt() + result.get(1).getCostInt() + result.get(2).getCostInt()) / 3;
+                spSum = (int) (ageSum * 0.9);
+
+                InputStream is1 = null;
+                InputStream is2 = null;
+                InputStream is3 = null;
+
+                if (jCheckBox2.isSelected()) {
+                    is1 = screenCom(this.browser, result.get(0).getLink(), this.pause);
+                    is2 = screenCom(this.browser, result.get(1).getLink(), this.pause);
+                    is3 = screenCom(this.browser, result.get(2).getLink(), this.pause);
+                }
+
+                toMsWord.process(param, ageSum, spSum, marka, model, is1, is2, is3);
+
+                new NewOkCancelDialog(this, true, "ok").setVisible(true);
+
+            } else {
+                new NewOkCancelDialog(this, true, "Результат меньше 3 позиций").setVisible(true);
+            }
+
+        }
+
+        if (jCheckBox4.isSelected()) {
+
+            //https://auto.ru/cars/toyota/auris/all/?beaten=1&customs_state=1&geo_radius=200&image=true&sort_offers=fresh_relevance_1-DESC&top_days=off&currency=RUR&output_type=list&page_num_offers=1
+            // marka in eng str
+            if (marka.length() > 0) {
+                urlAutoRu = urlAutoRu.concat(marka).concat("/");
+            }
+
+            if (model.length() > 0) {
+                urlAutoRu = urlAutoRu.concat(model).concat("/");
+            }
+
+            urlAutoRu = urlAutoRu.concat("all/");
+
+            parameters = "?beaten=1&customs_state=1&geo_radius=200&image=true&sort_offers=fresh_relevance_1-DESC&top_days=off&currency=RUR&output_type=list&page_num_offers=1";
+
+            System.out.println(urlAutoRu);
+
+            List<Item> result;
+            
+            result = new AutoRu().parse(urlAutoRu.concat(parameters), this.proxy);
+
+            jLabel7.setText("Количество позиций:".concat(Integer.toString(result.size())));
+            
+            if (result.size() >= 3) {
+
+                /**
+                 * MS WORD
+                 *
+                 */
+                ToMsWord toMsWord = new ToMsWord();
+
+                Format formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                String dateTime = formatter.format(Calendar.getInstance().getTime());
+
+                toMsWord.setNamefile(this.userHome + System.getProperty("file.separator") + "Report_" + dateTime + ".docx");
+
+                List<elem> param = new ArrayList<>();
+
+                param.add(new elem(result.get(0).getCost(), result.get(0).getLink()));
+                param.add(new elem(result.get(1).getCost(), result.get(1).getLink()));
+                param.add(new elem(result.get(2).getCost(), result.get(2).getLink()));
+
+                ageSum = (result.get(0).getCostInt() + result.get(1).getCostInt() + result.get(2).getCostInt()) / 3;
+                spSum = (int) (ageSum * 0.9);
+
+                InputStream is1 = null;
+                InputStream is2 = null;
+                InputStream is3 = null;
+
+                if (jCheckBox2.isSelected()) {
+                    is1 = screenCom(this.browser, result.get(0).getLink(), this.pause);
+                    is2 = screenCom(this.browser, result.get(1).getLink(), this.pause);
+                    is3 = screenCom(this.browser, result.get(2).getLink(), this.pause);
+                }
+
+                toMsWord.process(param, ageSum, spSum, marka, model, is1, is2, is3);
+
+                new NewOkCancelDialog(this, true, "ok").setVisible(true);
+
+            } else {
+                new NewOkCancelDialog(this, true, "Результат меньше 3 позиций").setVisible(true);
+            }
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -499,22 +692,37 @@ public class mainJFrame extends javax.swing.JFrame {
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
 
-        String key1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
-        String key2 = jComboBox2.getItemAt(jComboBox2.getSelectedIndex());
-
-        if (grModel2.containsKey(key1)) {
-            for (itemModel itemM: grModel2.get(key1)) {
-                if (itemM.getName().equals(key2)) {
-                    System.out.println(itemM.getName() + " " + itemM.getHref());
-                    urlGruzovikRu = itemM.getHref();
-                }
-            }
-        }
+//        String key1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+//        String key2 = jComboBox2.getItemAt(jComboBox2.getSelectedIndex());
+//
+//        if (grModel2.containsKey(key1)) {
+//            for (itemModel itemM : grModel2.get(key1)) {
+//                if (itemM.getName().equals(key2)) {
+//                    //System.out.println(itemM.getName() + " " + itemM.getHref());
+//                    urlGruzovikRu = itemM.getHref();
+//                }
+//            }
+//        }
+        click();
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenu4ActionPerformed
+
+    private void click() {
+        String key1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+        String key2 = jComboBox2.getItemAt(jComboBox2.getSelectedIndex());
+
+        if (grModel2.containsKey(key1)) {
+            for (itemModel itemM : grModel2.get(key1)) {
+                if (itemM.getName().equals(key2)) {
+                    //System.out.println(itemM.getName() + " " + itemM.getHref());
+                    urlGruzovikRu = itemM.getHref();
+                }
+            }
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -522,11 +730,31 @@ public class mainJFrame extends javax.swing.JFrame {
     public static void main(String args[]) {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 mainJFrame mf = new mainJFrame();
                 mf.urlStroytehRu = System.getProperty("urlStroytehRu");
                 mf.urlGruzovikRu = System.getProperty("urlGruzovikRu");
+                mf.urlAutoRu = System.getProperty("urlAutoRu");
                 mf.userHome = System.getProperty("target_dir") == null ? System.getProperty("user.home") : System.getProperty("target_dir");
+                mf.browser = System.getProperty("browser");
+                mf.pause = Integer.valueOf(System.getProperty("pause") == null ? "5000" : System.getProperty("pause"));
+                mf.proxyHost = System.getProperty("https.proxyHost");
+                mf.proxyPort = System.getProperty("https.proxyPort");
+
+                System.out.println(mf.urlStroytehRu);
+                System.out.println(mf.urlGruzovikRu);
+                System.out.println(mf.urlAutoRu);
+                System.out.println(mf.userHome);
+                System.out.println(mf.browser);
+                System.out.println(mf.pause);
+                System.out.println(mf.proxyHost);
+                System.out.println(mf.proxyPort);
+
+                if (mf.proxyHost != null && !"".equals(mf.proxyHost)) {
+                    mf.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(mf.proxyHost, Integer.valueOf(mf.proxyPort)));
+                }
+
                 mf.setVisible(true);
             }
         });
@@ -542,7 +770,9 @@ public class mainJFrame extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup7;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JDialog jDialog1;
@@ -554,6 +784,8 @@ public class mainJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -565,6 +797,7 @@ public class mainJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField jTextField7;
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;

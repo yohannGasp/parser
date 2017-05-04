@@ -8,7 +8,10 @@ package util;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.TextAlignment;
@@ -33,7 +36,7 @@ public class ToMsWord {
         this.namefile = namefile;
     }
 
-    public void process(List<elem> param, int ageSum, int spSum) {
+    public void process(List<elem> param, int ageSum, int spSum, String marka, String model, InputStream image1, InputStream image2, InputStream image3) {
 
         XWPFDocument doc = new XWPFDocument();
 
@@ -164,7 +167,7 @@ public class ToMsWord {
         p8.setVerticalAlignment(TextAlignment.BOTTOM);
 
         XWPFRun r81 = p8.createRun();
-        r81.setText("МАРКА МАШИНЫ");
+        r81.setText(marka.toUpperCase() + " " + model.toUpperCase());
         r81.setFontFamily("Times New Roman");
         r81.setFontSize(12);
         r81.addBreak(BreakType.TEXT_WRAPPING);
@@ -263,11 +266,11 @@ public class ToMsWord {
          * text parameters
          */
         XWPFParagraph p96 = doc.createParagraph();
-        p96.setAlignment(ParagraphAlignment.BOTH);
+        p96.setAlignment(ParagraphAlignment.LEFT);
         p96.setVerticalAlignment(TextAlignment.BOTTOM);
 
         XWPFRun r961 = p96.createRun();
-        
+
         r961.setText("№1. " + param.get(0).getPrice() + "  №2. " + param.get(1).getPrice() + " №3. " + param.get(2).getPrice());
         r961.setFontFamily("Times New Roman");
         r961.setFontSize(12);
@@ -387,6 +390,34 @@ public class ToMsWord {
         r1011.setFontFamily("Times New Roman");
         r1011.setFontSize(12);
         r1011.addBreak(BreakType.PAGE);
+
+        /**
+         * image
+         */
+        try {
+            XWPFParagraph p102 = doc.createParagraph();
+            p102.setAlignment(ParagraphAlignment.LEFT);
+            p102.setVerticalAlignment(TextAlignment.BOTTOM);
+
+            XWPFRun r1012 = p102.createRun();
+            if (image1 != null) {
+                r1012.addPicture(image1, XWPFDocument.PICTURE_TYPE_JPEG, "", Units.toEMU(500), Units.toEMU(400));
+                r1012.addBreak(BreakType.PAGE);
+            }
+            if (image2 != null) {
+                r1012.addPicture(image2, XWPFDocument.PICTURE_TYPE_JPEG, "", Units.toEMU(500), Units.toEMU(400));
+                r1012.addBreak(BreakType.PAGE);
+            }
+            if (image3 != null) {
+                r1012.addPicture(image3, XWPFDocument.PICTURE_TYPE_JPEG, "", Units.toEMU(500), Units.toEMU(400));
+                r1012.addBreak(BreakType.PAGE);
+            }
+
+        } catch (InvalidFormatException ex) {
+
+        } catch (IOException ex) {
+
+        }
 
         try (FileOutputStream out = new FileOutputStream(namefile);) {
 

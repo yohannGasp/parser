@@ -10,7 +10,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-DurlStroytehRu="https://www.stroyteh.ru/sale/xml/" -DurlGruzovikRu="https://www.gruzovik.ru/offers/trucks/refrigerator/" -Dtarget_dir=/tmp -classpath %classpath gui.mainJFrame</exec.args>
+                <exec.args>-DurlStroytehRu="https://www.stroyteh.ru/sale/xml/" -DurlGruzovikRu="https://www.gruzovik.ru" -DurlAutoRu="https://auto.ru/cars/" -Dtarget_dir=/tmp -Dbrowser="/usr/bin/firefox" -Dpause=7000 -classpath %classpath gui.mainJFrame</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
@@ -24,7 +24,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -DurlStroytehRu="https://www.stroyteh.ru/sale/xml/" -DurlGruzovikRu="https://www.gruzovik.ru/offers/trucks/refrigerator/" -Dtarget_dir=/tmp -classpath %classpath gui.mainJFrame</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -DurlStroytehRu="https://www.stroyteh.ru/sale/xml/" -DurlGruzovikRu="https://www.gruzovik.ru" -DurlAutoRu="https://auto.ru/cars/" -Dtarget_dir=/tmp -Dbrowser="/usr/bin/firefox" -Dpause=7000 -classpath %classpath gui.mainJFrame</exec.args>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
             </properties>
@@ -39,7 +39,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
             </goals>
             <properties>
-                <exec.args>-DurlStroytehRu="https://www.stroyteh.ru/sale/xml/" -DurlGruzovikRu="https://www.gruzovik.ru/offers/trucks/refrigerator/" -Dtarget_dir=/tmp -classpath %classpath gui.mainJFrame</exec.args>
+                <exec.args>-DurlStroytehRu="https://www.stroyteh.ru/sale/xml/" -DurlGruzovikRu="https://www.gruzovik.ru" -DurlAutoRu="https://auto.ru/cars/" -Dtarget_dir=/tmp -Dbrowser="/usr/bin/firefox" -Dpause=7000 -classpath %classpath gui.mainJFrame</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
         </action>
