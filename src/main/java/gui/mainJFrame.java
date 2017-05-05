@@ -1,6 +1,10 @@
 package gui;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import static java.lang.Thread.sleep;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.text.Format;
@@ -14,7 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.baikalinvestbank.parser.*;
 import static util.GrabScreen.screenCom;
 import util.ToMsWord;
@@ -32,32 +43,32 @@ import util.itemModel;
  */
 public class mainJFrame extends javax.swing.JFrame {
 
-    String urlStroytehRu;
-    String urlGruzovikRu;
-    String urlAutoRu;
-    String userHome;
-    String browser;
-    long pause;
-    String proxyHost;
-    String proxyPort;
-    Proxy proxy;
+    public final static Logger log = Logger.getLogger(mainJFrame.class.getName());
 
-    String marka = "";
-    String model = "";
-    String year = "";
-    String capacity = "";
-    String mileage = "";
-    String priceMax = "";
-    String priceMin = "";
+    private String urlStroytehRu;
+    private String urlGruzovikRu;
+    private String userHome;
+    private String browser;
+    private long pause;
+    private String proxyHost;
+    private String proxyPort;
+    private Proxy proxy;
+    private String listPath;
+    private String category;
+    private String log_path;
+    private String log_level;
 
     public String parameters = "?";
 
     Set<String> grModel1 = new TreeSet<>();
     Map<String, List<itemModel>> grModel2 = new HashMap<>();
 
+    int[] arr;
+
     /**
      * Creates new form mainJFrame
      */
+    @SuppressWarnings("empty-statement")
     public mainJFrame() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -203,6 +214,8 @@ public class mainJFrame extends javax.swing.JFrame {
         jTextField7 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jCheckBox4 = new javax.swing.JCheckBox();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jCheckBox5 = new javax.swing.JCheckBox();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
@@ -242,7 +255,7 @@ public class mainJFrame extends javax.swing.JFrame {
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
 
-        jButton1.setText("Start");
+        jButton1.setText("Один запрос");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -298,6 +311,15 @@ public class mainJFrame extends javax.swing.JFrame {
         jLabel9.setText("до");
 
         jCheckBox4.setText("auto.ru");
+
+        jToggleButton1.setText("Запросы по листу");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+
+        jCheckBox5.setText("распечатывать");
 
         jMenu1.setText("Файл");
         jMenuBar1.add(jMenu1);
@@ -358,21 +380,24 @@ public class mainJFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jCheckBox3, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                                .addComponent(jCheckBox3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(10, 10, 10)
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jCheckBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jCheckBox2)
-                                    .addComponent(jCheckBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jCheckBox5))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10))
+                .addGap(64, 64, 64))
             .addGroup(layout.createSequentialGroup()
                 .addGap(195, 195, 195)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(297, 297, 297)
                 .addComponent(jLabel8)
                 .addGap(26, 26, 26))
         );
@@ -390,14 +415,6 @@ public class mainJFrame extends javax.swing.JFrame {
                         .addComponent(jCheckBox1)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jCheckBox3)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox4))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -408,29 +425,40 @@ public class mainJFrame extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox2))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGap(21, 21, 21)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addGap(27, 27, 27)
-                .addComponent(jLabel7)
+                                    .addComponent(jLabel4))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9))
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabel7))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBox2)
+                                .addGap(18, 18, 18)
+                                .addComponent(jCheckBox5))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBox3)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox4)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jLabel8))
+                    .addComponent(jLabel8)
+                    .addComponent(jToggleButton1))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -447,13 +475,13 @@ public class mainJFrame extends javax.swing.JFrame {
 
         parameters = "?";
 
-        marka = jTextField1.getText();
-        model = jTextField2.getText();
-        year = jTextField3.getText();
-        capacity = jTextField4.getText();
-        mileage = jTextField5.getText();
-        priceMax = jTextField6.getText();
-        priceMin = jTextField7.getText();
+        String marka = jTextField1.getText();
+        String model = jTextField2.getText();
+        String year = jTextField3.getText();
+        String capacity = jTextField4.getText();
+        String mileage = jTextField5.getText();
+        String priceMax = jTextField6.getText();
+        String priceMin = jTextField7.getText();
 
         int ageSum;
         int spSum;
@@ -525,7 +553,9 @@ public class mainJFrame extends javax.swing.JFrame {
                     is3 = screenCom(this.browser, result.get(2).getLink(), this.pause);
                 }
 
-                toMsWord.process(param, ageSum, spSum, marka, model, is1, is2, is3);
+                Map<String, String> parameters = new HashMap<>();
+
+                toMsWord.process(param, parameters);
 
                 new NewOkCancelDialog(this, true, "ok").setVisible(true);
 
@@ -594,7 +624,9 @@ public class mainJFrame extends javax.swing.JFrame {
                     is3 = screenCom(this.browser, result.get(2).getLink(), this.pause);
                 }
 
-                toMsWord.process(param, ageSum, spSum, marka, model, is1, is2, is3);
+                Map<String, String> parameters = new HashMap<>();
+
+                toMsWord.process(param, parameters);
 
                 new NewOkCancelDialog(this, true, "ok").setVisible(true);
 
@@ -608,26 +640,26 @@ public class mainJFrame extends javax.swing.JFrame {
 
             //https://auto.ru/cars/toyota/auris/all/?beaten=1&customs_state=1&geo_radius=200&image=true&sort_offers=fresh_relevance_1-DESC&top_days=off&currency=RUR&output_type=list&page_num_offers=1
             // marka in eng str
-            if (marka.length() > 0) {
-                urlAutoRu = urlAutoRu.concat(marka).concat("/");
-            }
-
-            if (model.length() > 0) {
-                urlAutoRu = urlAutoRu.concat(model).concat("/");
-            }
-
-            urlAutoRu = urlAutoRu.concat("all/");
+//            if (marka.length() > 0) {
+//                urlAutoRu = urlAutoRu.concat(marka).concat("/");
+//            }
+//
+//            if (model.length() > 0) {
+//                urlAutoRu = urlAutoRu.concat(model).concat("/");
+//            }
+//
+//            urlAutoRu = urlAutoRu.concat("all/");
 
             parameters = "?beaten=1&customs_state=1&geo_radius=200&image=true&sort_offers=fresh_relevance_1-DESC&top_days=off&currency=RUR&output_type=list&page_num_offers=1";
 
-            System.out.println(urlAutoRu);
+//            log.log(Level.INFO, urlAutoRu);
 
-            List<Item> result;
-            
-            result = new AutoRu().parse(urlAutoRu.concat(parameters), this.proxy);
+            List<Item> result = null;
+
+//            result = new AutoRu().parse(urlAutoRu.concat(parameters), this.proxy);
 
             jLabel7.setText("Количество позиций:".concat(Integer.toString(result.size())));
-            
+
             if (result.size() >= 3) {
 
                 /**
@@ -660,7 +692,9 @@ public class mainJFrame extends javax.swing.JFrame {
                     is3 = screenCom(this.browser, result.get(2).getLink(), this.pause);
                 }
 
-                toMsWord.process(param, ageSum, spSum, marka, model, is1, is2, is3);
+                Map<String, String> parameters = new HashMap<>();
+
+                toMsWord.process(param, parameters);
 
                 new NewOkCancelDialog(this, true, "ok").setVisible(true);
 
@@ -691,24 +725,234 @@ public class mainJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox3ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-
-//        String key1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
-//        String key2 = jComboBox2.getItemAt(jComboBox2.getSelectedIndex());
-//
-//        if (grModel2.containsKey(key1)) {
-//            for (itemModel itemM : grModel2.get(key1)) {
-//                if (itemM.getName().equals(key2)) {
-//                    //System.out.println(itemM.getName() + " " + itemM.getHref());
-//                    urlGruzovikRu = itemM.getHref();
-//                }
-//            }
-//        }
         click();
     }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jMenu4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenu4ActionPerformed
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+
+        boolean f1 = false;
+        boolean f2 = false;
+        boolean f3 = false;
+
+        String marka = null;
+        String model = null;
+
+        JFileChooser fileopen = new JFileChooser();
+        int ret = fileopen.showDialog(null, "Выберите файл с таблицей");
+        if (ret == JFileChooser.APPROVE_OPTION) {
+
+            Workbook wb = null;
+            try {
+
+                File file = fileopen.getSelectedFile();
+                this.listPath = file.getName();
+
+                wb = new XSSFWorkbook(new FileInputStream(file));
+                Sheet sheet = wb.getSheetAt(0);
+                log.log(Level.INFO, "Лист " + sheet.getSheetName());
+
+                Iterator<Row> rowIterator = sheet.iterator();
+                rowIterator.next();
+                rowIterator.next();
+
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
+                    
+                    parser parser = new parser();
+
+                    Cell cell = row.getCell(7);
+                    if (cell != null) {
+                        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                            category = cell.getStringCellValue();
+                        }
+                    }
+
+                    if (category != null && category.length() > 0) {
+
+                        parser.rootUrl = parser.identifyCategory(category);
+                        f1 = true;
+
+                        // marka
+                        cell = row.getCell(8);
+                        if (cell != null) {
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                marka = cell.getStringCellValue();
+                                if (marka.length() > 0) {
+                                    // marka in eng str
+                                    marka = parser.translitMarka(marka.toUpperCase());
+                                    parser.rootUrl = parser.rootUrl.concat(marka).concat("/");
+                                    //urlAutoRu = urlAutoRu.concat(marka).concat("/");
+                                    f2 = true;
+                                }
+                            }
+                        }
+
+                        // model
+                        cell = row.getCell(9);
+                        if (cell != null) {
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                model = cell.getStringCellValue();
+                                if (model.length() > 0) {
+                                    parser.rootUrl = parser.rootUrl.concat(model).concat("/");
+                                    f3 = true;
+                                }
+                            }
+                        }
+                        
+                        String numkredDog = "1";
+                        cell = row.getCell(2);
+                        if (cell != null) {
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                numkredDog = cell.getStringCellValue();
+                            }
+                        }
+                        
+                        String dataKredDog = "12.12.2010";
+                        cell = row.getCell(3);
+                        if (cell != null) {
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                dataKredDog = cell.getStringCellValue();
+                            }
+                        }
+                        
+                        String numDogZal = "---";
+                        String dataDogZal = "---";
+                        
+                        String fio = "";
+                        cell = row.getCell(6);
+                        if (cell != null) {
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                fio = cell.getStringCellValue();
+                            }
+                        }                        
+                        
+                        String fioZaem = "";
+                        cell = row.getCell(1);
+                        if (cell != null) {
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                fioZaem = cell.getStringCellValue();
+                            }
+                        } 
+                        
+                        String mesto = "";
+                        cell = row.getCell(19);
+                        if (cell != null) {
+                            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                mesto = cell.getStringCellValue();
+                            }
+                        } 
+
+                        Format formatter = new SimpleDateFormat("dd.MM.yyyy");
+                        String data = formatter.format(Calendar.getInstance().getTime());
+
+                        // Only if there is a brand and model
+                        if (f1 && f2 && f3) {
+
+                            parser.rootUrl = parser.rootUrl.concat("all/");
+                            //urlAutoRu = urlAutoRu.concat("all/");
+
+                            parameters = "?beaten=1&customs_state=1&geo_radius=200&image=true&sort_offers=fresh_relevance_1-DESC&top_days=off&currency=RUR&output_type=list&page_num_offers=1";
+
+                            log.log(Level.INFO, parser.rootUrl);
+
+                            List<Item> result;
+                            result = parser.parse(new AutoRu(), parser.rootUrl.concat(parameters), this.proxy);
+
+                            jLabel7.setText("Количество позиций:".concat(Integer.toString(result.size())));
+
+                            if (result.size() >= 3) {
+
+                                /**
+                                 * MS WORD
+                                 *
+                                 */
+                                ToMsWord toMsWord = new ToMsWord();
+
+                                formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                                String dateTime = formatter.format(Calendar.getInstance().getTime());
+
+                                toMsWord.setNamefile(this.userHome + System.getProperty("file.separator") + "Report_" + dateTime + ".docx");
+
+                                // image 
+                                InputStream is1 = null;
+                                InputStream is2 = null;
+                                InputStream is3 = null;
+
+                                if (jCheckBox2.isSelected()) {
+                                    is1 = screenCom(this.browser, result.get(0).getLink(), this.pause);
+                                    is2 = screenCom(this.browser, result.get(1).getLink(), this.pause);
+                                    is3 = screenCom(this.browser, result.get(2).getLink(), this.pause);
+                                }
+
+                                // param
+                                List<elem> param = new ArrayList<>();
+
+                                param.add(new elem(result.get(0).getCost(), result.get(0).getLink(), is1));
+                                param.add(new elem(result.get(1).getCost(), result.get(1).getLink(), is2));
+                                param.add(new elem(result.get(2).getCost(), result.get(2).getLink(), is3));
+
+                                // ras
+                                int ageSum = (result.get(0).getCostInt() + result.get(1).getCostInt() + result.get(2).getCostInt()) / 3;
+                                int spSum = (int) (ageSum * 0.9);
+                                int zalSum = (int) (ageSum * 0.5);
+
+                                // par
+                                Map<String, String> par = new HashMap<>();
+
+                                par.put("numKredDog", numkredDog);
+                                par.put("dataKredDog", dataKredDog);
+                                par.put("numDogZal", numDogZal);
+                                par.put("dataDogZal", dataDogZal);
+                                par.put("fio", fio);
+                                par.put("fioZaem", fioZaem);
+                                par.put("mesto", mesto);
+                                par.put("marka", marka);
+                                par.put("model", model);
+                                par.put("ageSum", String.valueOf(ageSum));
+                                par.put("spSum", String.valueOf(spSum));
+                                par.put("zalSum", String.valueOf(zalSum));
+                                par.put("data", data);
+
+                                toMsWord.process(param, par);
+
+                                log.log(Level.INFO, "toMsWord ok");
+
+                            } else {
+                                log.log(Level.INFO, "Результат меньше 3 позиций");
+                            }
+
+                            f1 = false;
+                            f2 = false;
+                            f3 = false;
+                            marka = null;
+                            model = null;
+
+                            sleep(5531);
+
+                        }
+
+                    }
+
+                }
+
+                new NewOkCancelDialog(this, true, "ok").setVisible(true);
+
+            } catch (IOException | InterruptedException ex) {
+                log.log(Level.INFO, ex.toString());
+            } finally {
+                try {
+                    wb.close();
+                } catch (IOException ex) {
+                    log.log(Level.INFO, ex.toString());
+                }
+            }
+
+        }
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void click() {
         String key1 = jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
@@ -728,28 +972,47 @@ public class mainJFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 mainJFrame mf = new mainJFrame();
                 mf.urlStroytehRu = System.getProperty("urlStroytehRu");
                 mf.urlGruzovikRu = System.getProperty("urlGruzovikRu");
-                mf.urlAutoRu = System.getProperty("urlAutoRu");
                 mf.userHome = System.getProperty("target_dir") == null ? System.getProperty("user.home") : System.getProperty("target_dir");
                 mf.browser = System.getProperty("browser");
                 mf.pause = Integer.valueOf(System.getProperty("pause") == null ? "5000" : System.getProperty("pause"));
                 mf.proxyHost = System.getProperty("https.proxyHost");
                 mf.proxyPort = System.getProperty("https.proxyPort");
+                mf.listPath = System.getProperty("listPath");
+                mf.log_path = System.getProperty("log_path");
+                mf.log_level = System.getProperty("log_level");
 
-                System.out.println(mf.urlStroytehRu);
-                System.out.println(mf.urlGruzovikRu);
-                System.out.println(mf.urlAutoRu);
-                System.out.println(mf.userHome);
-                System.out.println(mf.browser);
-                System.out.println(mf.pause);
-                System.out.println(mf.proxyHost);
-                System.out.println(mf.proxyPort);
+                /**
+                 * Loger
+                 */
+                FileHandler fh;
+                try {
+
+                    fh = new FileHandler(mf.log_path, true);
+                    fh.setFormatter(new SimpleFormatter());
+                    fh.setEncoding("UTF-8");
+                    log.addHandler(fh);
+                    log.setLevel(Level.ALL);
+
+                } catch (IOException e) {
+                    System.out.println(e.toString());
+                }
+
+                log.log(Level.INFO, "urlStroytehRu:" + mf.urlStroytehRu);
+                log.log(Level.INFO, "urlGruzovikRu:" + mf.urlGruzovikRu);
+                log.log(Level.INFO, "userHome:" + mf.userHome);
+                log.log(Level.INFO, "browser:" + mf.browser);
+                log.log(Level.INFO, "pause:" + mf.pause);
+                log.log(Level.INFO, "proxyHost:" + mf.proxyHost);
+                log.log(Level.INFO, "proxyPort:" + mf.proxyPort);
+                log.log(Level.INFO, "listPath:" + mf.listPath);
+                log.log(Level.INFO, "log_path:" + mf.log_path);
+                log.log(Level.INFO, "log_level:" + mf.log_level);
 
                 if (mf.proxyHost != null && !"".equals(mf.proxyHost)) {
                     mf.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(mf.proxyHost, Integer.valueOf(mf.proxyPort)));
@@ -773,6 +1036,7 @@ public class mainJFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
+    private javax.swing.JCheckBox jCheckBox5;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JDialog jDialog1;
@@ -798,6 +1062,7 @@ public class mainJFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
+    private javax.swing.JToggleButton jToggleButton1;
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;

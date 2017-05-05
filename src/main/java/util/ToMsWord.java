@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.BreakType;
@@ -36,7 +37,7 @@ public class ToMsWord {
         this.namefile = namefile;
     }
 
-    public void process(List<elem> param, int ageSum, int spSum, String marka, String model, InputStream image1, InputStream image2, InputStream image3) {
+    public void process(List<elem> param, Map<String, String> parameters) {
 
         XWPFDocument doc = new XWPFDocument();
 
@@ -77,8 +78,8 @@ public class ToMsWord {
         p3.setVerticalAlignment(TextAlignment.BOTTOM);
 
         XWPFRun r3 = p3.createRun();
-        r3.setText("Залог предоставлен по договору залога № от .04.2017, в обеспечение предоставленной");
-        r3.setText("Банком ссуды по договору № от .04.2017 с");
+        r3.setText("Залог предоставлен по договору залога № " + parameters.get("numDogZal") + " от " + parameters.get("dataDogZal") + ", в обеспечение предоставленной ");
+        r3.setText("Банком ссуды по договору № " + parameters.get("numKredDog") + " от " + parameters.get("dataKredDog") + " с " + parameters.get("fioZaem"));
         r3.setFontFamily("Times New Roman");
         r3.setFontSize(12);
         r3.addBreak(BreakType.TEXT_WRAPPING);
@@ -167,7 +168,7 @@ public class ToMsWord {
         p8.setVerticalAlignment(TextAlignment.BOTTOM);
 
         XWPFRun r81 = p8.createRun();
-        r81.setText(marka.toUpperCase() + " " + model.toUpperCase());
+        r81.setText(parameters.get("marka").toUpperCase() + " " + parameters.get("model").toUpperCase());
         r81.setFontFamily("Times New Roman");
         r81.setFontSize(12);
         r81.addBreak(BreakType.TEXT_WRAPPING);
@@ -195,7 +196,7 @@ public class ToMsWord {
         p91.setVerticalAlignment(TextAlignment.BOTTOM);
 
         XWPFRun r92 = p91.createRun();
-        r92.setText("РФ,");
+        r92.setText("РФ," + parameters.get("mesto"));
         r92.setFontFamily("Times New Roman");
         r92.setFontSize(12);
         r92.addBreak(BreakType.TEXT_WRAPPING);
@@ -344,7 +345,7 @@ public class ToMsWord {
 
         XWPFRun r981 = p98.createRun();
         r981.setBold(true);
-        r981.setText("Рыночная стоимость залога составляет:" + ageSum + " ₽");
+        r981.setText("Рыночная стоимость залога составляет:" + parameters.get("ageSum") + " ₽");
         r981.setFontFamily("Times New Roman");
         r981.setFontSize(12);
         r981.addBreak(BreakType.TEXT_WRAPPING);
@@ -358,7 +359,7 @@ public class ToMsWord {
 
         XWPFRun r991 = p99.createRun();
         r991.setBold(true);
-        r991.setText("Справедливая стоимость залога составляет:" + spSum + " ₽");
+        r991.setText("Справедливая стоимость залога составляет:" + parameters.get("spSum") + " ₽");
         r991.setFontFamily("Times New Roman");
         r991.setFontSize(12);
         r991.addBreak(BreakType.TEXT_WRAPPING);
@@ -372,7 +373,7 @@ public class ToMsWord {
 
         XWPFRun r1001 = p100.createRun();
         r1001.setBold(true);
-        r1001.setText("Залоговая стоимость составляет: ₽");
+        r1001.setText("Залоговая стоимость составляет:" + parameters.get("zalSum") + " ₽");
         r1001.setFontFamily("Times New Roman");
         r1001.setFontSize(12);
         r1001.addBreak(BreakType.TEXT_WRAPPING);
@@ -386,7 +387,7 @@ public class ToMsWord {
 
         XWPFRun r1011 = p101.createRun();
         r1011.setBold(true);
-        r1011.setText("Дата                         Подпись Эксперта _______________________");
+        r1011.setText("Дата " + parameters.get("data") + "       Подпись Эксперта _______________________");
         r1011.setFontFamily("Times New Roman");
         r1011.setFontSize(12);
         r1011.addBreak(BreakType.PAGE);
@@ -400,14 +401,17 @@ public class ToMsWord {
             p102.setVerticalAlignment(TextAlignment.BOTTOM);
 
             XWPFRun r1012 = p102.createRun();
+            InputStream image1 = param.get(0).getImage();
             if (image1 != null) {
                 r1012.addPicture(image1, XWPFDocument.PICTURE_TYPE_JPEG, "", Units.toEMU(500), Units.toEMU(400));
                 r1012.addBreak(BreakType.PAGE);
             }
+            InputStream image2 = param.get(1).getImage();
             if (image2 != null) {
                 r1012.addPicture(image2, XWPFDocument.PICTURE_TYPE_JPEG, "", Units.toEMU(500), Units.toEMU(400));
                 r1012.addBreak(BreakType.PAGE);
             }
+            InputStream image3 = param.get(2).getImage();
             if (image3 != null) {
                 r1012.addPicture(image3, XWPFDocument.PICTURE_TYPE_JPEG, "", Units.toEMU(500), Units.toEMU(400));
                 r1012.addBreak(BreakType.PAGE);

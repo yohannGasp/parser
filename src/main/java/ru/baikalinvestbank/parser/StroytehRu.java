@@ -22,7 +22,7 @@ import util.Convert;
  *
  * @author evgeniy
  */
-public class StroytehRu {
+public class StroytehRu implements site {
 
     class JaxbParser {
 
@@ -87,6 +87,7 @@ public class StroytehRu {
      * @param url
      * @return
      */
+    @Override
     public List<Item> parse(String url, Proxy proxy) {
 
         List<Item> mas = new ArrayList<>();

@@ -5,11 +5,13 @@
  */
 package ru.baikalinvestbank.parser;
 
+import static gui.mainJFrame.log;
 import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,8 +21,9 @@ import org.jsoup.select.Elements;
  *
  * @author evgeniy
  */
-public class AutoRu {
+public class AutoRu implements site {
 
+    @Override
     public List<Item> parse(String url, Proxy proxy) {
 
         List<Item> mas = new ArrayList<>();
@@ -37,7 +40,7 @@ public class AutoRu {
                     .header("Accept-Language", "ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4")
                     .header("Cache-Control", "max-age=0")
                     .header("Connection", "keep-alive") //from_lifetime=1493708922010
-                    .header("Cookie", "suid=d4913b48d70dedbe20e22a90bde96575.5ce8d089ef617fc6151dbbf89e67c8c5; autoru_sid=a:dc31e550a88d0ad8238a06a32d2b9878.0cb100052927cc8b5d1cf6ec2e2dbae7|1493706248324.604800.A86X9qfp9C7PCnwW6Alufg.ITK0FU6Hs-0c4pxvKLFcLVEatBsWl6vJHmccyVkk_2k; autoruuid=dc31e550a88d0ad8238a06a32d2b9878.0cb100052927cc8b5d1cf6ec2e2dbae7; yandexuid=2366842291493695463; _ym_uid=14937062511019534966; _ym_isad=1; los=win; af_lpdid=2:391171837; from_lifetime=1493710235430; from=yandex")
+                    .header("Cookie", "suid=d4913b48d70dedbe20e22a90bde96575.5ce8d089ef617fc6151dbbf89e67c8c5; autoru_sid=a:dc31e550a88d0ad8238a06a32d2b9878.0cb100052927cc8b5d1cf6ec2e2dbae7|1493706248324.604800.A86X9qfp9C7PCnwW6Alufg.ITK0FU6Hs-0c4pxvKLFcLVEatBsWl6vJHmccyVkk_2k; autoruuid=dc31e550a88d0ad8238a06a32d2b9878.0cb100052927cc8b5d1cf6ec2e2dbae7; yandexuid=2366842291493695463; _ym_uid=14937062511019534966; _ym_isad=1; los=win; af_lpdid=2:391171837; from_lifetime=1493955916675; from=yandex")
                     .header("Host", "auto.ru")
                     .header("Referer", "https://auto.ru/")
                     .header("Upgrade-Insecure-Requests", "1")
@@ -53,9 +56,9 @@ public class AutoRu {
                     String price = element.getElementsByClass("listing-item__price").text();
                     price = price.substring(0, price.indexOf("₽") - 1).trim();
 
-                    System.out.println(href);
-                    System.out.println(price);
-                    System.out.println("=======================");
+                    log.log(Level.INFO, href);
+                    log.log(Level.INFO, price);
+                    log.log(Level.INFO, "=======================");
                     
                     Item item = new Item();
                     item.link = href;
@@ -83,7 +86,7 @@ public class AutoRu {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.log(Level.INFO, e.getMessage());
         }
 
         return result;

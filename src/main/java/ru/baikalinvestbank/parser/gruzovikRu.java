@@ -19,8 +19,9 @@ import org.jsoup.select.Elements;
  *
  * @author evgeniy
  */
-public class gruzovikRu {
+public class gruzovikRu implements site {
 
+    @Override
     public List<Item> parse(String url, Proxy proxy) {
 
         List<Item> mas = new ArrayList<>();
