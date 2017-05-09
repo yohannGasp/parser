@@ -24,8 +24,12 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+
+import config.BeenConfig;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.baikalinvestbank.parser.*;
 import static util.GrabScreen.screenCom;
 import util.ToMsWord;
@@ -762,7 +766,9 @@ public class mainJFrame extends javax.swing.JFrame {
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
                     
-                    parser parser = new parser();
+                    //parser parser = new parser();
+                    ApplicationContext context = new AnnotationConfigApplicationContext(BeenConfig.class);
+                    parser parser = (parser) context.getBean("parser_bean");
 
                     Cell cell = row.getCell(7);
                     if (cell != null) {
