@@ -5,8 +5,17 @@
  */
 package ru.baikalinvestbank.parser;
 
+import static gui.mainJFrame.log;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.net.Proxy;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
  *
@@ -15,6 +24,8 @@ import java.util.List;
 public class parser {
 
     public String rootUrl;
+    public List<proxyServer> proxyList = new ArrayList<>();
+    int indProxy = 0;
 
     /**
      *
@@ -180,6 +191,67 @@ public class parser {
         }
 
         return result;
+    }
+
+    /**
+     * getProxy
+     * @return
+     */
+    public proxyServer getProxy() {
+        proxyServer res = null;
+        
+        if (this.indProxy == this.proxyList.size()) {
+            this.indProxy = 0;
+        }
+        
+        res = this.proxyList.get(indProxy++);
+        log.log(Level.INFO, "getProxy " + res.getServer() + ":" + res.getPort());
+        return res;
+    }
+
+    /**
+     * loadProxy
+     *
+     * @param json
+     */
+    public void loadProxy(String json) {
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject jsonObj = (JSONObject) parser.parse(json);
+            JSONArray ja = (JSONArray) jsonObj.get("proxy_servers");
+            for (int i = 0, size = ja.size(); i < size; i++) {
+                JSONObject jo = (JSONObject) ja.get(i);
+                this.proxyList.add(new proxyServer(jo.get("server").toString(), jo.get("port").toString()));
+            }
+            log.log(Level.INFO, "loadProxy size:" + this.proxyList.size());
+            log.log(Level.INFO, "loadProxy ok");
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    /**
+     * fromFile
+     *
+     * @param path
+     * @return
+     */
+    public String fromFile(String path) {
+        String str = null;
+        try {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8"));) {
+                StringBuilder sb = new StringBuilder();
+                while ((str = br.readLine()) != null) {
+                    sb.append(str);
+                }
+                str = sb.toString();
+            }
+        } catch (Exception e) {
+
+        }
+        return str;
     }
 
 }

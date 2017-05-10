@@ -1,5 +1,6 @@
 package gui;
 
+import config.BeenConfig;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,8 +25,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-
-import config.BeenConfig;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.ApplicationContext;
@@ -54,13 +53,12 @@ public class mainJFrame extends javax.swing.JFrame {
     private String userHome;
     private String browser;
     private long pause;
-    private String proxyHost;
-    private String proxyPort;
     private Proxy proxy;
     private String listPath;
     private String category;
     private String log_path;
     private String log_level;
+    private String fileProxyList;
 
     public String parameters = "?";
 
@@ -68,6 +66,8 @@ public class mainJFrame extends javax.swing.JFrame {
     Map<String, List<itemModel>> grModel2 = new HashMap<>();
 
     int[] arr;
+
+    ApplicationContext springContext;
 
     /**
      * Creates new form mainJFrame
@@ -653,15 +653,12 @@ public class mainJFrame extends javax.swing.JFrame {
 //            }
 //
 //            urlAutoRu = urlAutoRu.concat("all/");
-
             parameters = "?beaten=1&customs_state=1&geo_radius=200&image=true&sort_offers=fresh_relevance_1-DESC&top_days=off&currency=RUR&output_type=list&page_num_offers=1";
 
 //            log.log(Level.INFO, urlAutoRu);
-
             List<Item> result = null;
 
 //            result = new AutoRu().parse(urlAutoRu.concat(parameters), this.proxy);
-
             jLabel7.setText("Количество позиций:".concat(Integer.toString(result.size())));
 
             if (result.size() >= 3) {
@@ -745,6 +742,14 @@ public class mainJFrame extends javax.swing.JFrame {
         String marka = null;
         String model = null;
 
+        int countStr = 0;
+
+        parser parser = (parser) this.springContext.getBean("parser_bean");
+
+        parser.loadProxy(parser.fromFile(this.fileProxyList));
+        proxyServer proxy1 = parser.getProxy();
+        this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxy1.getServer(), Integer.valueOf(proxy1.getPort())));
+
         JFileChooser fileopen = new JFileChooser();
         int ret = fileopen.showDialog(null, "Выберите файл с таблицей");
         if (ret == JFileChooser.APPROVE_OPTION) {
@@ -765,10 +770,6 @@ public class mainJFrame extends javax.swing.JFrame {
 
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
-                    
-                    //parser parser = new parser();
-                    ApplicationContext context = new AnnotationConfigApplicationContext(BeenConfig.class);
-                    parser parser = (parser) context.getBean("parser_bean");
 
                     Cell cell = row.getCell(7);
                     if (cell != null) {
@@ -808,7 +809,7 @@ public class mainJFrame extends javax.swing.JFrame {
                                 }
                             }
                         }
-                        
+
                         String numkredDog = "1";
                         cell = row.getCell(2);
                         if (cell != null) {
@@ -816,7 +817,7 @@ public class mainJFrame extends javax.swing.JFrame {
                                 numkredDog = cell.getStringCellValue();
                             }
                         }
-                        
+
                         String dataKredDog = "12.12.2010";
                         cell = row.getCell(3);
                         if (cell != null) {
@@ -824,33 +825,33 @@ public class mainJFrame extends javax.swing.JFrame {
                                 dataKredDog = cell.getStringCellValue();
                             }
                         }
-                        
+
                         String numDogZal = "---";
                         String dataDogZal = "---";
-                        
+
                         String fio = "";
                         cell = row.getCell(6);
                         if (cell != null) {
                             if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
                                 fio = cell.getStringCellValue();
                             }
-                        }                        
-                        
+                        }
+
                         String fioZaem = "";
                         cell = row.getCell(1);
                         if (cell != null) {
                             if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
                                 fioZaem = cell.getStringCellValue();
                             }
-                        } 
-                        
+                        }
+
                         String mesto = "";
                         cell = row.getCell(19);
                         if (cell != null) {
                             if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
                                 mesto = cell.getStringCellValue();
                             }
-                        } 
+                        }
 
                         Format formatter = new SimpleDateFormat("dd.MM.yyyy");
                         String data = formatter.format(Calendar.getInstance().getTime());
@@ -863,7 +864,15 @@ public class mainJFrame extends javax.swing.JFrame {
 
                             parameters = "?beaten=1&customs_state=1&geo_radius=200&image=true&sort_offers=fresh_relevance_1-DESC&top_days=off&currency=RUR&output_type=list&page_num_offers=1";
 
-                            log.log(Level.INFO, parser.rootUrl);
+                            log.log(Level.INFO, parser.rootUrl);countStr++;
+                            log.log(Level.INFO, "count request " + Integer.toString(countStr));
+
+                            // every 10 requests change proxy
+                            if (countStr % 10 == 0) {
+                                proxyServer proxy2 = parser.getProxy();
+                                this.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxy2.getServer(), Integer.valueOf(proxy2.getPort())));
+                                log.log(Level.INFO, "change proxy ".concat(proxy2.getServer()).concat(":").concat(proxy2.getPort()));
+                            }
 
                             List<Item> result;
                             result = parser.parse(new AutoRu(), parser.rootUrl.concat(parameters), this.proxy);
@@ -987,11 +996,10 @@ public class mainJFrame extends javax.swing.JFrame {
                 mf.userHome = System.getProperty("target_dir") == null ? System.getProperty("user.home") : System.getProperty("target_dir");
                 mf.browser = System.getProperty("browser");
                 mf.pause = Integer.valueOf(System.getProperty("pause") == null ? "5000" : System.getProperty("pause"));
-                mf.proxyHost = System.getProperty("https.proxyHost");
-                mf.proxyPort = System.getProperty("https.proxyPort");
                 mf.listPath = System.getProperty("listPath");
                 mf.log_path = System.getProperty("log_path");
                 mf.log_level = System.getProperty("log_level");
+                mf.fileProxyList = System.getProperty("fileProxyList");
 
                 /**
                  * Loger
@@ -1014,15 +1022,12 @@ public class mainJFrame extends javax.swing.JFrame {
                 log.log(Level.INFO, "userHome:" + mf.userHome);
                 log.log(Level.INFO, "browser:" + mf.browser);
                 log.log(Level.INFO, "pause:" + mf.pause);
-                log.log(Level.INFO, "proxyHost:" + mf.proxyHost);
-                log.log(Level.INFO, "proxyPort:" + mf.proxyPort);
                 log.log(Level.INFO, "listPath:" + mf.listPath);
                 log.log(Level.INFO, "log_path:" + mf.log_path);
                 log.log(Level.INFO, "log_level:" + mf.log_level);
+                log.log(Level.INFO, "fileProxyList:" + mf.fileProxyList);
 
-                if (mf.proxyHost != null && !"".equals(mf.proxyHost)) {
-                    mf.proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(mf.proxyHost, Integer.valueOf(mf.proxyPort)));
-                }
+                mf.springContext = new AnnotationConfigApplicationContext(BeenConfig.class);
 
                 mf.setVisible(true);
             }
